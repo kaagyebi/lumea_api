@@ -1,0 +1,35 @@
+lumea-backend/
+├── config/
+│   └── db.js               // DB connection setup
+│   └── cloudinary.js       // Cloudinary setup (image upload)
+├── controllers/
+│   ├── authController.js
+│   ├── userController.js
+│   ├── cosmetologistController.js
+│   ├── appointmentController.js
+│   ├── skinReportController.js
+│   └── recommendationController.js
+├── middleware/
+│   ├── authMiddleware.js   // JWT verify & role check
+│   ├── errorHandler.js
+│   └── uploadMiddleware.js // multer/cloudinary
+├── models/
+│   ├── User.js
+│   ├── Appointment.js
+│   ├── SkinReport.js
+│   └── Recommendation.js
+├── routes/
+│   ├── authRoutes.js
+│   ├── userRoutes.js
+│   ├── cosmetologistRoutes.js
+│   ├── appointmentRoutes.js
+│   ├── skinReportRoutes.js
+│   └── recommendationRoutes.js
+├── services/
+│   └── aiService.js        // ML/AI analysis logic
+├── utils/
+│   └── validators.js       // Joi/Zod validators
+├── .env
+├── .gitignore
+├── server.js
+└── package.json
