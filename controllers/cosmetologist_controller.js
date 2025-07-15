@@ -48,6 +48,8 @@ export const getAppointments = async (req, res) => {
 
 export const registerCosmetologist = async (req, res) => {
   try {
+    console.log('FILES:', req.files);
+    console.log('BODY:', req.body);
     const { name, email, password, areaOfExpertise } = req.body;
     if (!req.files || !req.files.picture || !req.files.certificate) {
       return res.status(400).json({ message: 'Picture and certificate are required.' });

@@ -25,6 +25,7 @@ const cosmetologistStorage = new CloudinaryStorage({
         public_id: `certificate-${Date.now()}`
       };
     }
+    throw new Error(`Unexpected field: ${file.fieldname}`);
   }
 });
 
