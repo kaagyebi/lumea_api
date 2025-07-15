@@ -9,7 +9,11 @@ export const register = async (req, res) => {
     if (existing) return res.status(400).json({ message: 'User already exists' });
 
     const hashed = await bcrypt.hash(password, 12);
-    const user = await User.create({ name, email, password: hashed, role });
+    let profile = {};
+    if (req.file && req.file.path) {
+      profile.image = req.file.path;
+    }
+    const user = await User.create({ name, email, password: hashed, role, profile });
 
     const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET);
 
