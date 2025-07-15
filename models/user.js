@@ -31,11 +31,19 @@ const userSchema = new mongoose.Schema({
             ref: "SkinReport",
         },
     ],
+    areaOfExpertise: {
+        type: String,
+    },
+    certificate: {
+        type: String, // URL to uploaded certificate
+    },
     profile: {
         bio: String,
         specialization: String,
         image: String,
-        availability: String,     
+        availability: String,
+        certificate: String, // URL to uploaded certificate (for profile display)
+        areaOfExpertise: String, // For profile display
     },
 }, { timestamps: true });
 

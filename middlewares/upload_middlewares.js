@@ -7,6 +7,7 @@ dotenv.config();
 
 let storage = null;
 let profileStorage = null;
+let certificateStorage = null;
 
 const getCloudinaryStorage = () => {
   if (!storage) {
@@ -76,6 +77,34 @@ const getProfilePictureStorage = () => {
   return profileStorage;
 };
 
+const getCertificateStorage = () => {
+  if (!certificateStorage) {
+    const cloudName = process.env.CLOUDINARY_CLOUD_NAME;
+    const apiKey = process.env.CLOUDINARY_API_KEY;
+    const apiSecret = process.env.CLOUDINARY_API_SECRET;
+    if (!cloudName || !apiKey || !apiSecret) {
+      throw new Error('Cloudinary environment variables (CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, CLOUDINARY_API_SECRET) are required for image uploads');
+    }
+    cloudinary.config({
+      cloud_name: cloudName,
+      api_key: apiKey,
+      api_secret: apiSecret,
+    });
+    certificateStorage = new CloudinaryStorage({
+      cloudinary: cloudinary,
+      params: {
+        folder: 'lumea_certificates',
+        allowed_formats: ['jpg', 'png', 'jpeg', 'pdf'],
+        public_id: (req, file) => {
+          const userId = req.user ? req.user.id : 'unknown-user';
+          return `certificate-${userId}-${Date.now()}`;
+        },
+      },
+    });
+  }
+  return certificateStorage;
+};
+
 export const upload = multer({ 
   storage: getCloudinaryStorage(),
   limits: {
@@ -87,5 +116,12 @@ export const uploadProfilePicture = multer({
   storage: getProfilePictureStorage(),
   limits: {
     fileSize: 5 * 1024 * 1024, // 5MB limit
+  }
+});
+
+export const uploadCertificate = multer({
+  storage: getCertificateStorage(),
+  limits: {
+    fileSize: 10 * 1024 * 1024, // 10MB limit
   }
 });
