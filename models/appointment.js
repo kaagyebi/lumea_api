@@ -21,9 +21,19 @@ const appointmentSchema = new mongoose.Schema({
     },
     weight: {
         type: Number,
-        
     },
-    description: String,
+    height: {
+        type: Number,
+    },
+    hairColor: {
+        type: String,
+    },
+    hairType: {
+        type: String,
+    },
+    description: {
+        type: String,
+    },
     date: {
         type: Date,
         required: true,
@@ -31,7 +41,6 @@ const appointmentSchema = new mongoose.Schema({
     time: {
         type: String,
         required: true,
-        // set for daytime local
     },
     gender: {
         type: String,
@@ -47,7 +56,6 @@ const appointmentSchema = new mongoose.Schema({
     },
     notes: String,
 }, { timestamps: true });
-
 
 appointmentSchema.set('toJSON', {
     virtuals: true,

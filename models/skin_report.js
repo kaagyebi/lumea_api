@@ -19,6 +19,9 @@ const skinReportSchema = new mongoose.Schema({
         texture: { type: String },
         oilLevel: { type: String },
         precautions: { type: [String] },
+        overallScore: { type: Number, default: 0 },
+        skinSummary: { type: String, default: "" },
+        quantitativeAnalysis: { type: String, default: "" }
     },
     cosmetologistNotes: String,
     recommendations: [{
