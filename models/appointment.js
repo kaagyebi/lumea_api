@@ -17,7 +17,6 @@ const appointmentSchema = new mongoose.Schema({
     },
     tone: {
         type: String,
-        required: true,
     },
     weight: {
         type: Number,
