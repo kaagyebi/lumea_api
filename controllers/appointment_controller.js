@@ -10,7 +10,8 @@ export const bookAppointment = async (req, res) => {
       skinType, 
       tone, 
       weight, 
-      description, 
+      description,
+      concern, 
       gender, 
       age 
     } = req.body;
@@ -24,6 +25,7 @@ export const bookAppointment = async (req, res) => {
       tone,
       weight,
       description,
+      concern,
       gender,
       age,
       status: 'pending'

@@ -46,6 +46,9 @@ const appointmentSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    concern: {
+        type: String,
+    },
     age: {
         type: Number,
     },
