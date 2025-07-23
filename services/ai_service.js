@@ -6,7 +6,7 @@ const getOpenAIClient = () => {
   if (!openai) {
     const apiKey = process.env.OPENAI_API_KEY;
     if (!apiKey) {
-      throw new Error('OPENAI_API_KEY environment variable is required for skin analysis');
+      throw new Error('OPENAI_API_KEY environment variable is required');
     }
     openai = new OpenAI({ apiKey });
   }
@@ -39,18 +39,16 @@ function fillMissingAnalysisFields(analysis) {
 }
 
 /**
- * Analyze skin image using OpenAI
+ * Analyze skin image
  * @param {string} imageUrl - URL of the uploaded image
  * @returns {Object} tone, type, conditions, overallScore, skinSummary, quantitativeAnalysis
  */
 export const analyzeSkinImage = async (imageUrl) => {
   try {
-    console.log(`Analyzing image with OpenAI: ${imageUrl}`);
-    
     const client = getOpenAIClient();
 
     const response = await client.chat.completions.create({
-      model: "gpt-4o", 
+      model: "gpt-4o",
       response_format: { type: "json_object" },
       messages: [
         {
@@ -75,8 +73,8 @@ export const analyzeSkinImage = async (imageUrl) => {
     // Fallback: ensure all required analysis fields are present
     const analysis = fillMissingAnalysisFields(aiResult);
     return analysis;
-  } catch (error) {
-    console.error("Error calling OpenAI API:", error);
+  } catch (err) {
+    console.error("Error calling OpenAI API:", err);
     throw new Error("Failed to analyze skin image.");
   }
 };

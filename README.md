@@ -1,12 +1,11 @@
 # Lumea API
 
-A comprehensive skincare and cosmetology appointment management API with skin analysis capabilities.
+A comprehensive skincare and cosmetology appointment management API.
 
 ## Features
 
 - **User Authentication**: Register and login for users and cosmetologists
 - **Appointment Management**: Book, view, and manage appointments
-- **Skin Analysis**: Upload images for automated skin analysis
 - **User Profiles**: Manage user and cosmetologist profiles
 - **Role-based Access**: Different permissions for users and cosmetologists
 
@@ -31,9 +30,6 @@ JWT_SECRET=your_jwt_secret_key_here_make_it_long_and_secure
 CLOUDINARY_CLOUD_NAME=your_cloudinary_cloud_name
 CLOUDINARY_API_KEY=your_cloudinary_api_key
 CLOUDINARY_API_SECRET=your_cloudinary_api_secret
-
-# OpenAI Configuration (for skin analysis)
-OPENAI_API_KEY=your_openai_api_key_here
 
 # Server Configuration
 PORT=5000
@@ -198,11 +194,6 @@ The API returns appropriate HTTP status codes and error messages:
 - Ensure Cloudinary credentials are correct
 - Check file format (jpg, png, jpeg only)
 - Verify file size limits
-
-### 4. Skin Analysis Issues
-- Ensure OpenAI API key is valid
-- Check API quota and billing
-- Verify the image URL is accessible
 
 ## Development
 

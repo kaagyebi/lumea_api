@@ -72,7 +72,7 @@ export const getCosmetologistAppointments = async (req, res) => {
     console.log(`Searching for appointments with query:`, query);
     
     const appointments = await Appointment.find(query)
-      .populate('user', 'name email')
+      .populate('user', 'name email profile')
       .sort({ date: 1 });
     
     console.log(`Found ${appointments.length} appointments for cosmetologist ${req.user.id}`);
@@ -102,7 +102,7 @@ export const getAllAppointments = async (req, res) => {
     }
     
     const appointments = await Appointment.find(query)
-      .populate('user', 'name email')
+      .populate('user', 'name email profile')
       .populate('cosmetologist', 'name email profile')
       .sort({ date: 1 });
     
@@ -151,7 +151,7 @@ export const updateAppointmentStatus = async (req, res) => {
       id,
       updateData,
       { new: true }
-    ).populate('user', 'name email').populate('cosmetologist', 'name email');
+    ).populate('user', 'name email profile').populate('cosmetologist', 'name email profile');
     
     res.json(updatedAppointment);
   } catch (err) {
