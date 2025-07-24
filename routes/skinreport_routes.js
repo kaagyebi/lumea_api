@@ -4,7 +4,8 @@ import {
   analyzeAndSaveReport, 
   getMySkinReports,
   getSkinReportById,
-  downloadSkinReport 
+  downloadSkinReport,
+  getSkinReportByUserId 
 } from "../controllers/skinreport_controller.js";
 import { upload } from "../middlewares/upload_middlewares.js";
 
@@ -19,6 +20,8 @@ skinReportRouter.get('/', protect(['user']), getMySkinReports);
 // Get a specific skin report by ID. Accessible by the owner, an associated cosmetologist, or an admin.
 // The controller handles the detailed authorization logic.
 skinReportRouter.get('/:id', protect(['user', 'cosmetologist', 'admin']), getSkinReportById);
+
+skinReportRouter.get('/user/:id', protect(['user', 'cosmetologist', 'admin']), getSkinReportByUserId);
 
 // Download a specific skin report as a PDF. Same access rules as getting the report by ID.
 skinReportRouter.get('/:id/download', protect(['user', 'cosmetologist', 'admin']), downloadSkinReport);

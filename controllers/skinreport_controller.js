@@ -89,6 +89,52 @@ export const getSkinReportById = async (req, res) => {
   }
 };
 
+// Get report for user by Cosmetologist
+export const getSkinReportByUserId = async (req, res) => {
+  try {
+    const report = await SkinReport.find({user: req.params.id} ).populate('user', 'name');
+    
+    if (!report) {
+      return res.status(404).json({ message: 'Report not found' });
+    }
+    // console.log(report)
+
+    const requester = req.user;
+    
+    const reportList = []
+    for (let i = 0; i < report.length; i++) {
+      const reportOwnerId = report[i].user._id.toString();
+      // Security Check:
+    // 1. The user who owns the report can view it.
+    const isOwner = reportOwnerId === requester.id;
+    // 2. An admin can view any report.
+    const isAdmin = requester.role === 'admin';
+    // 3. A cosmetologist can view the report if they have an appointment with the user.
+    let isAssociatedCosmetologist = false;
+    if (requester.role === 'cosmetologist') {
+      const appointment = await Appointment.findOne({
+        user: reportOwnerId,
+        cosmetologist: requester.id,
+      });
+      if (appointment) {
+        isAssociatedCosmetologist = true;
+      }
+    }
+
+    if (!isOwner && !isAdmin && !isAssociatedCosmetologist) {
+      continue;
+    }
+    reportList.push(report[i])
+    }
+    // console.log(reportList)
+    
+
+    res.json(reportList);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
 /**
  * @desc    Download a single skin report as a PDF
  * @route   GET /api/skin-reports/:id/download
