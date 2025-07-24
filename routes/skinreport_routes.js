@@ -10,17 +10,15 @@ import { upload } from "../middlewares/upload_middlewares.js";
 
 export const skinReportRouter = Router();
 
-// Upload and analyze skin image (main route)
-skinReportRouter.post('/', protect(), upload.single('image'), analyzeAndSaveReport);
+// USER-ONLY: Upload and analyze a new skin image.
+skinReportRouter.post('/', protect(['user']), upload.single('image'), analyzeAndSaveReport);
 
-// Upload and analyze skin image (backward compatibility)
-skinReportRouter.post('/upload', protect(), upload.single('image'), analyzeAndSaveReport);
+// USER-ONLY: Get all skin reports for the currently logged-in user.
+skinReportRouter.get('/', protect(['user']), getMySkinReports);
 
-// Get all skin reports for current user
-skinReportRouter.get('/', protect(), getMySkinReports);
+// Get a specific skin report by ID. Accessible by the owner, an associated cosmetologist, or an admin.
+// The controller handles the detailed authorization logic.
+skinReportRouter.get('/:id', protect(['user', 'cosmetologist', 'admin']), getSkinReportById);
 
-// Get specific skin report by ID
-skinReportRouter.get('/:id', protect(), getSkinReportById);
-
-// Download skin report as PDF
-skinReportRouter.get('/:id/download', protect(), downloadSkinReport);
+// Download a specific skin report as a PDF. Same access rules as getting the report by ID.
+skinReportRouter.get('/:id/download', protect(['user', 'cosmetologist', 'admin']), downloadSkinReport);

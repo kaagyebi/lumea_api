@@ -17,4 +17,4 @@ recommendationRouter.get("/cosmetologist", protect(['cosmetologist']), getCosmet
 
 // GET /user/:userId - Get all recommendations for a specific user.
 // A regular user can use this for their own ID, or a cosmetologist can check a client's.
-recommendationRouter.get("/user/:userId", protect(), getUserRecommendations);
+recommendationRouter.get("/user/:userId", protect(['user', 'cosmetologist', 'admin']), getUserRecommendations);

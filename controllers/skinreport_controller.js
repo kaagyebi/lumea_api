@@ -2,6 +2,7 @@ import SkinReport from '../models/skin_report.js';
 import { analyzeSkinImage } from '../services/ai_service.js';
 import User from '../models/user.js';
 import PDFDocument from 'pdfkit';
+import Appointment from '../models/appointment.js';
 
 /**
  * @desc    Analyze an uploaded image, create a skin report, and save it
@@ -58,8 +59,27 @@ export const getSkinReportById = async (req, res) => {
       return res.status(404).json({ message: 'Report not found' });
     }
 
-    // Security Check: Ensure the user owns this report
-    if (report.user._id.toString() !== req.user.id) {
+    const requester = req.user;
+    const reportOwnerId = report.user._id.toString();
+
+    // Security Check:
+    // 1. The user who owns the report can view it.
+    const isOwner = reportOwnerId === requester.id;
+    // 2. An admin can view any report.
+    const isAdmin = requester.role === 'admin';
+    // 3. A cosmetologist can view the report if they have an appointment with the user.
+    let isAssociatedCosmetologist = false;
+    if (requester.role === 'cosmetologist') {
+      const appointment = await Appointment.findOne({
+        user: reportOwnerId,
+        cosmetologist: requester.id,
+      });
+      if (appointment) {
+        isAssociatedCosmetologist = true;
+      }
+    }
+
+    if (!isOwner && !isAdmin && !isAssociatedCosmetologist) {
       return res.status(403).json({ message: 'User not authorized to view this report' });
     }
 
@@ -82,8 +102,27 @@ export const downloadSkinReport = async (req, res) => {
       return res.status(404).json({ message: 'Report not found' });
     }
 
-    // Security Check: Ensure the user owns this report
-    if (report.user._id.toString() !== req.user.id) {
+    const requester = req.user;
+    const reportOwnerId = report.user._id.toString();
+
+    // Security Check:
+    // 1. The user who owns the report can view it.
+    const isOwner = reportOwnerId === requester.id;
+    // 2. An admin can view any report.
+    const isAdmin = requester.role === 'admin';
+    // 3. A cosmetologist can view the report if they have an appointment with the user.
+    let isAssociatedCosmetologist = false;
+    if (requester.role === 'cosmetologist') {
+      const appointment = await Appointment.findOne({
+        user: reportOwnerId,
+        cosmetologist: requester.id,
+      });
+      if (appointment) {
+        isAssociatedCosmetologist = true;
+      }
+    }
+
+    if (!isOwner && !isAdmin && !isAssociatedCosmetologist) {
       return res.status(403).json({ message: 'User not authorized to download this report' });
     }
 

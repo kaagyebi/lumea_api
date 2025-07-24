@@ -1,15 +1,32 @@
 import Recommendation from '../models/recommendation.js';
 import SkinReport from '../models/skin_report.js';
+import Appointment from '../models/appointment.js';
 
 export const getUserRecommendations = async (req, res) => {
   try {
     const { userId } = req.params;
-    const { user } = req;
+    const requester = req.user;
 
-    // Check permissions: user can access their own recommendations, admins can access any
-    if (user.role !== 'admin' && user.id !== userId) {
-      return res.status(403).json({ 
-        message: 'Forbidden: You can only access your own recommendations' 
+    // Security Check:
+    // 1. The user who owns the recommendations can view them.
+    const isOwner = userId === requester.id;
+    // 2. An admin can view any recommendations.
+    const isAdmin = requester.role === 'admin';
+    // 3. A cosmetologist can view recommendations if they have an appointment with the user.
+    let isAssociatedCosmetologist = false;
+    if (requester.role === 'cosmetologist') {
+      const appointment = await Appointment.findOne({
+        user: userId,
+        cosmetologist: requester.id,
+      });
+      if (appointment) {
+        isAssociatedCosmetologist = true;
+      }
+    }
+
+    if (!isOwner && !isAdmin && !isAssociatedCosmetologist) {
+      return res.status(403).json({
+        message: 'Forbidden: You are not authorized to view these recommendations'
       });
     }
 
